@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>wavy-visor</title>
+
+    <link rel="stylesheet" href="../../stylesheets/web-experiments.css" />
+    <link rel="stylesheet" href="../../stylesheets/web-experiments-page.css" /></head>
+<body>
+<header>
+    <h1 class="title">wavy-visor</h1>
+    <a href="../../">home</a>
+</header>
+<div class="space">
+    <section>
+        <h2>Idea</h2>
+        <p>Waves are a beautiful sight for a lonely visitor to beach. But when a particle physicist visitor turns out to be that lonely visitor, things are not as expected.</p>
+    </section>
+    <section>
+        <h2>See yourself</h2>
+        <div class="preview"></div>
+    </section>
+</div>
+</body>
+<script src="../../scripts/web-experiments-page.js"></script>
+<script src="../../scripts/three.js"></script>
+<script src="wavy-visor.js"></script>
+<script>WavyVisor.init(document.body.querySelector(".preview"))</script>
+</html>

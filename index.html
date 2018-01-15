@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>web-experiments</title>
+
+    <link rel="stylesheet" href="stylesheets/web-experiments.css" />
+    <style>
+        body {
+            background-color: white;
+        }
+
+        div.container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        div.tile {
+            background-color: #fafafa;
+            box-sizing: border-box;
+            width: 200px;
+            height: 200px;
+            color: rgba(0, 0, 0, 0.54);
+            font-size: 18px;
+            padding: 10px;
+            margin: 18px 18px 0 0;
+            will-change: transform;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        div.tile:hover {
+            background-color: #f7f7f7;
+            transform: scale(1.05);
+        }
+
+        div.tile:active {
+            transition: transform 0.1s, background-color 0s;
+            background-color: #f2f2f2;
+            transform: scale(1.03);
+        }
+
+        div.overlay {
+            background-color: #fafafa;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            color: rgba(0, 0, 0, 0.54);
+            font-size: 18px;
+        }
+
+        div.overlay > h1.title {
+            color: rgba(0, 0, 0, 0.42);
+            margin: 16px 24px;
+            font-size: 27px;
+            font-weight: 300;
+        }
+
+        @media (max-width: 720px) {
+            div.tile {
+                width: 100%;
+                max-width: calc(100vw - 14px);
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 class="title">web-experiments</h1>
+</header>
+<div class="space">
+    <section>
+        <h2>WebGL Experiments</h2>
+        <div class="container">
+            <div class="tile" data-name="dot-gravitator">dot-gravitator</div>
+            <div class="tile" data-name="wavy-visor">wavy-visor</div>
+        </div>
+    </section>
+</div>
+<div class="overlay" hidden>
+    <h1 class="title"></h1>
+</div>
+</body>
+<script>
+    const observer = new IntersectionObserver(entries => {
+        let animatedCount = 0;
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.animate([
+                    {transform: "scale(1.0)", opacity: 1},
+                    {transform: "scale(1.1)", opacity: 0.7, offset: 0.2},
+                    {transform: "scale(1.0)", opacity: 1},
+                ], {
+                    duration: 400,
+                    delay: animatedCount * 200,
+                    easing: "cubic-bezier(0.39, 0.575, 0.565, 1)"
+                });
+                animatedCount++;
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    const overlay = document.body.querySelector("div.overlay");
+    overlay.expand = tile => {
+        const overlayTitle = overlay.querySelector("h1.title");
+        overlayTitle.innerText = tile.innerText;
+        overlay.removeAttribute("hidden");
+
+        overlayTitle.animate([
+            {fontSize: "18px"},
+            {fontSize: "27px"},
+        ], {
+            duration: 400,
+            easing: "cubic-bezier(0.39, 0.575, 0.565, 1)"
+        });
+
+        return overlay.animate([
+            {
+                width: `${tile.offsetWidth}px`,
+                height: `${tile.offsetHeight}px`,
+                position: "fixed",
+                left: `${tile.offsetLeft}px`,
+                top: `${tile.offsetTop}px`
+            },
+            {
+                width: "100vw",
+                height: "100vh",
+                position: "fixed",
+                left: 0,
+                top: 0
+            },
+        ], {
+            duration: 400,
+            easing: "cubic-bezier(0.39, 0.575, 0.565, 1)"
+        });
+    };
+
+    document.body.querySelectorAll("div.space div.tile").forEach(tile => {
+        observer.observe(tile);
+        tile.addEventListener("click", event => overlay.expand(tile).onfinish = () => {
+            window.location.href = `experiments/${tile.dataset.name}`;
+        });
+    });
+
+</script>
+</html>

@@ -1,0 +1,31 @@
+
+
+.preview {
+    height: 400px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid #dedede;
+}
+
+
+
+header > a {
+    text-decoration: none;
+    color: rgba(0,0,0,0.42);
+    align-self: center;
+    border: 1px solid rgba(0, 0, 0, 0.42);
+    border-radius: 4px;
+    padding: 4px 7px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+header > a:hover {
+    text-decoration: underline;
+}
+
+[faded] {
+    opacity: 0;
+}
