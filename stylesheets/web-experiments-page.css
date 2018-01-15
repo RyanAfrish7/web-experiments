@@ -25,7 +25,3 @@ header > a {
 header > a:hover {
     text-decoration: underline;
 }
-
-[faded] {
-    opacity: 0;
-}
