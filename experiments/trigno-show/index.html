@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>trigno-show</title>
+
+    <link rel="stylesheet" href="../../stylesheets/web-experiments.css" />
+    <link rel="stylesheet" href="../../stylesheets/web-experiments-page.css" /></head>
+<body>
+<header>
+    <h1 class="title">trigno-show</h1>
+    <a href="../../">home</a>
+</header>
+<div class="space">
+    <section>
+        <h2>Idea</h2>
+        <p>Triangles since Euclid have always been a tool for the man kind. It can also be a visually pleasing aid.</p>
+    </section>
+    <section>
+        <h2>See yourself</h2>
+        <div class="preview"></div>
+    </section>
+</div>
+</body>
+<script src="../../scripts/web-experiments-page.js"></script>
+<script src="../../lib/three.js"></script>
+<script src="trigno-show.js"></script>
+<script>TrignoShow.init(document.body.querySelector(".preview"))</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87666667-4"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'UA-87666667-4');
+</script>
+
+</html>
