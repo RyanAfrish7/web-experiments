@@ -26,7 +26,7 @@
             font-size: 18px;
             padding: 10px;
             margin: 18px 18px 0 0;
-            will-change: transform;
+            will-change: auto;
             transition: transform 0.2s, background-color 0.2s;
         }
 
@@ -79,6 +79,12 @@
         </div>
     </section>
     <section>
+        <h2>Contributions</h2>
+        <p>Fork the <a href="https://github.com/RyanAfrish7/web-experiments">repository</a> on GitHub.</p>
+        <p>I'm happy to merge your pull requests once they proved fit against my investigation. If you've got a creative
+            piece of brain that can help but cannot code, send me your ideas.</p>
+    </section>
+    <section>
         <h2>License</h2>
         <p>All the experiments available here are licensed under <a href="LICENSE">the MIT License</a>.</p>
     </section>
@@ -106,6 +112,7 @@
                 }).onfinish = () => {
                     entry.target.removeAttribute("faded");
                 };
+                sectionObserver.unobserve(entry.target);
             }
         });
     });
