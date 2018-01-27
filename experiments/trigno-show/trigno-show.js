@@ -40,7 +40,6 @@ class TrignoShow {
             let z = transitionScale / minDistance;
             let value = 1 - 1 / Math.exp(z * distance - transitionScale);
 
-            console.log(value);
             return grayColor.clone().lerp(whiteColor, value);
         };
 
@@ -100,27 +99,6 @@ class TrignoShow {
             }
         }
 
-        // const material = new THREE.MeshBasicMaterial({
-        //     opacity: 1,
-        //     wireframe: true,
-        //     vertexColors: THREE.VertexColors,
-        //     side: THREE.DoubleSide
-        // });
-        // const computeColor = vertex => {
-        //     const distance = this.mousePosition.distanceTo(vertex);
-        //
-        //     if (distance < minDistance) {
-        //         return grayColor;
-        //     }
-        //
-        //     let z = transitionScale / minDistance;
-        //     let value = 1 - 1 / Math.exp(z * distance - transitionScale);
-        //
-        //     console.log(value);
-        //     return grayColor.clone().lerp(whiteColor, value);
-        // };
-
-
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 mouse_position: {type: "v2", value: undefined},
@@ -167,7 +145,7 @@ class TrignoShow {
         }
 
         const smoothFunction = val => {
-            return Math.sign(val) * Math.sqrt(Math.abs(val));
+            return Math.sign(val) * (1 - 1 / Math.exp(2 * Math.abs(val)));
         };
 
         if (this.trignoMesh.material.uniforms.mouse_position.value) {
@@ -180,14 +158,9 @@ class TrignoShow {
     }
 
     mouseMove(event) {
-        this.trignoMesh.material.uniforms.mouse_position.value = new THREE.Vector2(event.clientX - this.container.offsetLeft, -(event.clientY - this.container.offsetTop) + this.container.offsetHeight);
-        this.mousePosition = new THREE.Vector2(event.clientX - this.container.offsetLeft, event.clientY - this.container.offsetTop);
-        if (this.lastEventTime) {
-            const delta = this.lastEventTime - event.timestamp;
-            this.mouseVelocity = Math.sqrt(event.movementX * event.movementX + event.movementY * event.movementY);
-        }
-
-        this.lastEventTime = event.timestamp;
+        const boundingRect = this.container.getBoundingClientRect();
+        this.trignoMesh.material.uniforms.mouse_position.value = new THREE.Vector2(event.clientX - boundingRect.left, -(event.clientY - boundingRect.top) + boundingRect.height);
+        this.mousePosition = new THREE.Vector2(event.clientX - boundingRect.left, event.clientY - boundingRect.top);
     }
 
     mouseLeave(event) {
