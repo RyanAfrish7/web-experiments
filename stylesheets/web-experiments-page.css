@@ -1,15 +1,11 @@
-
-
 .preview {
-    height: 400px;
+    min-height: 400px;
     box-sizing: border-box;
     background-color: white;
     border-radius: 7px;
     overflow: hidden;
     border: 1px solid #dedede;
 }
-
-
 
 header > a {
     text-decoration: none;

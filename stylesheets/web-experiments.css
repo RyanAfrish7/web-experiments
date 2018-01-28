@@ -29,6 +29,10 @@ section {
     margin-top: 24px;
 }
 
+section:last-of-type {
+    margin-bottom: 100px;
+}
+
 @media (max-width: 720px) {
     div.space {
         max-width: 100vw;
