@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>gender-ator</title>
+
+    <link rel="stylesheet" href="../../stylesheets/web-experiments.css"/>
+    <link rel="stylesheet" href="../../stylesheets/web-experiments-page.css"/>
+
+    <style>
+        div.preview label {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 20px;
+            color: rgba(0, 0, 0, 0.42);
+            background-color: #fcfcfc;
+        }
+
+        div.preview div.input-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 36px;
+        }
+
+        div.preview input {
+            max-width: 360px;
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #dedede;
+            text-align: center;
+            font-size: 36px;
+            font-weight: 300;
+            color: rgba(0, 0, 0, 0.42);
+        }
+
+        div.preview input:focus {
+            outline: none;
+        }
+
+        div.preview input::placeholder {
+            color: rgba(0, 0, 0, 0.24);
+        }
+
+        div.svg-container {
+            display: flex;
+            justify-content: center;
+            height: 200px;
+        }
+
+        rect.male {
+            fill: steelblue;
+        }
+
+        rect.female {
+            fill: #e2738c;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 class="title">gender-ator</h1>
+    <a href="../../">home</a>
+</header>
+<div class="space">
+    <section>
+        <h2>Idea</h2>
+        <p>When the Andrej Karpathy's <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/">"The
+            Unreasonable Effectiveness of Recurrent Neural Networks"</a> post hit the world, the aftermath is quite
+            machine learnable.</p>
+    </section>
+    <section>
+        <h2>Learn yourself</h2>
+        <div class="preview">
+            <label>Try typing your name</label>
+            <div class="input-wrapper"><input id="name" maxlength="24"></div>
+            <div class="svg-container">
+                <svg></svg>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+
+<script src="../../scripts/web-experiments-page.js"></script>
+<script src="../../lib/keras.js"></script>
+<script src="../../lib/d3.js"></script>
+<script src="gender-ator.js"></script>
+
+<script>
+    // create chart using d3
+    const width = 100, height = 100;
+
+    const x = d3.scaleBand().range([0, width]).domain(["male", "female"]);
+    const y = d3.scaleLinear().range([height, 0]).domain([0, 1]);
+
+    const chart = d3.select("svg").attr("width", width).attr("height", height).append("g");
+
+    const data = [
+        {gender: "male", probability: 0.5},
+        {gender: "female", probability: 0.5}
+    ];
+
+    chart.selectAll("rect")
+        .data(data)
+        .enter().append("rect")
+        .attr("x", d => x(d.gender))
+        .attr("y", d => height - y(d.probability))
+        .attr("width", x.bandwidth())
+        .attr("height", d => y(d.probability))
+        .classed("male", d => d.gender === "male")
+        .classed("female", d => d.gender === "female");
+
+    function applyPredictions(predictions) {
+        chart.selectAll("rect")
+            .data([
+                {gender: "male", probability: predictions[1]},
+                {gender: "female", probability: predictions[0]}
+            ])
+            .classed("male", d => d.gender === "male")
+            .classed("female", d => d.gender === "female")
+            .transition()
+            .attr("x", d => x(d.gender))
+            .attr("y", d => height - y(d.probability))
+            .attr("width", x.bandwidth())
+            .attr("height", d => y(d.probability));
+    }
+
+    // initialize the model and chart
+    const genderAtor = GenderAtor.init();
+    const nameInputElement = document.getElementById("name");
+
+    nameInputElement.placeholder = ["Nazriya", "Anushka", "Zayn", "Hrithik", "Amala Paul"][Math.floor(Math.random() * 5)];
+    genderAtor.predict(nameInputElement.placeholder).then(applyPredictions);
+
+    // setup event listeners
+    nameInputElement.addEventListener("input", async event => {
+        const name = nameInputElement.value.toLowerCase().trim();
+        if (name.length === 0) {
+            genderAtor.predict(nameInputElement.placeholder).then(applyPredictions);
+        } else if (name.length < 3) {
+            applyPredictions([0.5, 0.5]);
+        } else {
+            const predictions = await genderAtor.predict(name);
+            applyPredictions(predictions);
+        }
+    });
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87666667-4"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'UA-87666667-4');
+</script>
+
+</html>
